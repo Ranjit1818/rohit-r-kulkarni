@@ -1,10 +1,26 @@
-import { useRef, useEffect, useState, useCallback } from 'react';
+import { useRef, useEffect, useState, useCallback, useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import { projects } from '../../data/projects';
+import { projects, type Project } from '../../data/projects';
 import './ProjectShowcase.css';
 
+type FilterCategory = 'all' | 'academic' | 'hospitality' | 'competition' | 'technical' | 'residential';
+
+interface FilterOption {
+  key: FilterCategory;
+  label: string;
+}
+
+const FILTER_OPTIONS: FilterOption[] = [
+  { key: 'all', label: 'All Projects' },
+  { key: 'academic', label: 'Academic & Campus' },
+  { key: 'hospitality', label: 'Hospitality & Resort' },
+  { key: 'competition', label: 'Competition Awards' },
+  { key: 'technical', label: 'Working Drawings' },
+  { key: 'residential', label: 'Residential Freelance' },
+];
+
 function ProjectCard({ project, index }: {
-  project: typeof projects[0];
+  project: Project;
   index: number;
 }) {
   const cardRef = useRef<HTMLDivElement>(null);
@@ -27,7 +43,6 @@ function ProjectCard({ project, index }: {
   }, []);
 
   const handleImageError = useCallback((e: React.SyntheticEvent<HTMLImageElement>) => {
-    // Use a colored placeholder if image doesn't exist
     const target = e.currentTarget;
     target.style.display = 'none';
     const parent = target.parentElement;
@@ -35,6 +50,11 @@ function ProjectCard({ project, index }: {
       parent.style.background = `linear-gradient(135deg, ${project.color}22, ${project.color}44)`;
     }
   }, [project.color]);
+
+  const totalMedia = (project.gallery?.length || 0) + (project.drawings?.length || 0);
+  const mediaLabel = project.category === 'technical'
+    ? `${project.gallery.length} Sheets`
+    : `${totalMedia || 1} Views`;
 
   return (
     <div
@@ -54,7 +74,7 @@ function ProjectCard({ project, index }: {
             }}
           >
             <img
-              src={project.heroImage}
+              src={encodeURI(project.heroImage)}
               alt={`${project.title} — ${project.type}`}
               loading="lazy"
               onLoad={() => setImgLoaded(true)}
@@ -62,6 +82,12 @@ function ProjectCard({ project, index }: {
               className={`project-card-image ${imgLoaded ? 'is-loaded' : ''}`}
             />
             <div className="project-card-image-overlay" />
+
+            {/* Media count badge */}
+            <div className="project-card-badge">
+              <span className="project-card-badge-dot" style={{ backgroundColor: project.color }} />
+              <span className="project-card-badge-text">{mediaLabel}</span>
+            </div>
           </div>
 
           {/* Architectural frame lines */}
@@ -89,7 +115,9 @@ function ProjectCard({ project, index }: {
           </div>
 
           <p className="project-card-description">
-            {project.description.substring(0, 120)}...
+            {project.description.length > 150
+              ? `${project.description.substring(0, 145)}...`
+              : project.description}
           </p>
 
           <div className="project-card-cta">
@@ -105,6 +133,7 @@ function ProjectCard({ project, index }: {
 export default function ProjectShowcase() {
   const sectionRef = useRef<HTMLElement>(null);
   const [headerVisible, setHeaderVisible] = useState(false);
+  const [activeFilter, setActiveFilter] = useState<FilterCategory>('all');
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -114,12 +143,25 @@ export default function ProjectShowcase() {
           observer.disconnect();
         }
       },
-      { threshold: 0.3 }
+      { threshold: 0.2 }
     );
 
     const header = document.getElementById('work-header');
     if (header) observer.observe(header);
     return () => observer.disconnect();
+  }, []);
+
+  const filteredProjects = useMemo(() => {
+    if (activeFilter === 'all') return projects;
+    return projects.filter((p) => p.category === activeFilter);
+  }, [activeFilter]);
+
+  const counts = useMemo(() => {
+    const map: Record<string, number> = { all: projects.length };
+    projects.forEach((p) => {
+      map[p.category] = (map[p.category] || 0) + 1;
+    });
+    return map;
   }, []);
 
   return (
@@ -144,13 +186,32 @@ export default function ProjectShowcase() {
           </h2>
 
           <p className="projects-header-description">
-            Each project is a response to its unique conditions — site, climate, culture,
-            and the aspirations of its inhabitants. Explore the work.
+            Each project is a rigorous response to site, climate, tectonic expression, and spatial experience — spanning institutional campuses, terrain resorts, heritage museums, technical working drawings, and residential architecture.
           </p>
+
+          {/* Category Filter Pills */}
+          <div className="projects-filters">
+            {FILTER_OPTIONS.map((opt) => {
+              const count = counts[opt.key] || 0;
+              if (count === 0 && opt.key !== 'all') return null;
+              const isActive = activeFilter === opt.key;
+              return (
+                <button
+                  key={opt.key}
+                  type="button"
+                  onClick={() => setActiveFilter(opt.key)}
+                  className={`projects-filter-btn ${isActive ? 'is-active' : ''}`}
+                >
+                  <span className="projects-filter-label">{opt.label}</span>
+                  <span className="projects-filter-count">{count}</span>
+                </button>
+              );
+            })}
+          </div>
         </div>
 
         <div className="projects-list">
-          {projects.map((project, index) => (
+          {filteredProjects.map((project, index) => (
             <ProjectCard key={project.id} project={project} index={index} />
           ))}
         </div>

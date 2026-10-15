@@ -347,45 +347,77 @@
 }
 
 @media (max-width: 768px) {
-  /* Mobile: full-width portrait on top, text below */
+  /* Mobile: portrait on top towards left, text directly below */
   .hero-center {
     display: flex;
     flex-direction: column;
-    align-items: stretch;
+    align-items: flex-start;
     width: 100%;
-    gap: var(--space-md);
-    /* Ensure center section fills available height */
+    gap: 1.25rem;
     flex: 1;
     justify-content: center;
   }
 
-  /* Portrait comes first visually (order swap) */
+  /* Portrait comes first visually and sits towards the left */
   .hero-portrait-col {
     order: -1;
     margin-left: 0;
-    width: 100%;
-    justify-content: center;
-    align-items: center;
+    margin-right: auto;
+    width: auto;
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+  }
+
+  .hero.is-ready .hero-portrait-col {
+    animation: portraitRevealMobile 1.2s var(--ease-out-expo) 0.3s both;
+  }
+
+  @keyframes portraitRevealMobile {
+    0% {
+      opacity: 0;
+      transform: translateY(-16px) scale(0.96);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
   }
 
   .hero-portrait-frame {
-    width: clamp(150px, 42vw, 190px);
+    width: clamp(120px, 34vw, 160px);
     height: auto;
     aspect-ratio: unset;
-    border-radius: 2px;
+    border: none;
+    box-shadow: none;
+    margin: 0;
   }
 
   .hero-portrait-img {
+    width: 100%;
+    height: auto;
+    display: block;
     object-position: unset;
+    filter: contrast(1.03);
   }
 
-  /* Text col full width */
+  /* Clean cutout — no borders or corner brackets on mobile */
+  .hero-portrait-corner {
+    display: none;
+  }
+
+  .hero-portrait-overlay {
+    display: none;
+  }
+
+  /* Text col full width and aligned to left */
   .hero-text-col {
     max-width: 100%;
     width: 100%;
     padding-right: 0;
     gap: var(--space-sm);
     order: 0;
+    text-align: left;
   }
 
   .hero-name-text {

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, useCallback } from 'react';
+import { useEffect, useRef, useState, useCallback, useMemo } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { projects, type ProjectImage } from '../data/projects';
 import './ProjectPage.css';
@@ -9,29 +9,32 @@ function ImageWithFallback({
   className,
   style,
   color,
+  onClick,
 }: {
   src: string;
   alt: string;
   className?: string;
   style?: React.CSSProperties;
   color?: string;
+  onClick?: () => void;
 }) {
   const [loaded, setLoaded] = useState(false);
   const [errored, setErrored] = useState(false);
 
   return (
     <div
-      className={`project-img-wrap ${className || ''}`}
+      className={`project-img-wrap ${className || ''} ${onClick ? 'is-clickable' : ''}`}
       style={{
         ...style,
         background: !loaded || errored
           ? `linear-gradient(145deg, ${color || '#1a1918'}22, ${color || '#1a1918'}44)`
           : undefined,
       }}
+      onClick={onClick}
     >
       {!errored && (
         <img
-          src={src}
+          src={encodeURI(src)}
           alt={alt}
           loading="lazy"
           onLoad={() => setLoaded(true)}
@@ -44,6 +47,12 @@ function ImageWithFallback({
           <span className="project-img-placeholder-text">{alt}</span>
         </div>
       )}
+      {onClick && loaded && (
+        <div className="project-img-hover-hint">
+          <span className="project-img-hover-icon">⤢</span>
+          <span className="project-img-hover-text">Inspect Sheet</span>
+        </div>
+      )}
     </div>
   );
 }
@@ -54,9 +63,46 @@ export default function ProjectPage() {
   const pageRef = useRef<HTMLDivElement>(null);
   const [isReady, setIsReady] = useState(false);
 
-  const project = projects.find((p: typeof projects[0]) => p.id === id);
-  const projectIndex = projects.findIndex((p: typeof projects[0]) => p.id === id);
+  // Lightbox state
+  const [activeImageIndex, setActiveImageIndex] = useState<number | null>(null);
+  const [isZoomed, setIsZoomed] = useState(false);
+
+  const project = projects.find((p) => p.id === id);
+  const projectIndex = projects.findIndex((p) => p.id === id);
   const nextProject = projects[(projectIndex + 1) % projects.length];
+
+  // All distinct images for the lightbox viewer
+  const allMediaImages = useMemo(() => {
+    if (!project) return [];
+    const map = new Map<string, ProjectImage>();
+
+    // Add hero first
+    if (project.heroImage) {
+      map.set(project.heroImage, {
+        src: project.heroImage,
+        alt: `${project.title} — Primary View`,
+        caption: 'Primary Architectural Perspective',
+      });
+    }
+
+    // Add gallery
+    project.gallery?.forEach((img) => {
+      if (!map.has(img.src)) map.set(img.src, img);
+    });
+
+    // Add drawings / plans / sections
+    project.drawings?.forEach((img) => {
+      if (!map.has(img.src)) map.set(img.src, img);
+    });
+    project.plans?.forEach((img) => {
+      if (!map.has(img.src)) map.set(img.src, img);
+    });
+    project.sections?.forEach((img) => {
+      if (!map.has(img.src)) map.set(img.src, img);
+    });
+
+    return Array.from(map.values());
+  }, [project]);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -72,6 +118,45 @@ export default function ProjectPage() {
     }, 100);
   }, [navigate]);
 
+  const openLightbox = useCallback((src: string) => {
+    const idx = allMediaImages.findIndex((img) => img.src === src);
+    if (idx !== -1) {
+      setActiveImageIndex(idx);
+      setIsZoomed(false);
+    }
+  }, [allMediaImages]);
+
+  const closeLightbox = useCallback(() => {
+    setActiveImageIndex(null);
+    setIsZoomed(false);
+  }, []);
+
+  const nextImage = useCallback(() => {
+    if (activeImageIndex === null || allMediaImages.length === 0) return;
+    setActiveImageIndex((activeImageIndex + 1) % allMediaImages.length);
+    setIsZoomed(false);
+  }, [activeImageIndex, allMediaImages.length]);
+
+  const prevImage = useCallback(() => {
+    if (activeImageIndex === null || allMediaImages.length === 0) return;
+    setActiveImageIndex((activeImageIndex - 1 + allMediaImages.length) % allMediaImages.length);
+    setIsZoomed(false);
+  }, [activeImageIndex, allMediaImages.length]);
+
+  // Keyboard navigation for lightbox
+  useEffect(() => {
+    if (activeImageIndex === null) return;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') closeLightbox();
+      else if (e.key === 'ArrowRight') nextImage();
+      else if (e.key === 'ArrowLeft') prevImage();
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [activeImageIndex, closeLightbox, nextImage, prevImage]);
+
   if (!project) {
     return (
       <div className="project-page-empty">
@@ -80,6 +165,8 @@ export default function ProjectPage() {
       </div>
     );
   }
+
+  const activeMedia = activeImageIndex !== null ? allMediaImages[activeImageIndex] : null;
 
   return (
     <div ref={pageRef} className={`project-page ${isReady ? 'is-ready' : ''}`}>
@@ -125,14 +212,16 @@ export default function ProjectPage() {
       </section>
 
       {/* Hero Image */}
-      <section className="project-hero-image">
-        <ImageWithFallback
-          src={project.heroImage}
-          alt={`${project.title} — hero`}
-          className="project-hero-img"
-          color={project.color}
-        />
-      </section>
+      {project.heroImage && (
+        <section className="project-hero-image" onClick={() => openLightbox(project.heroImage)}>
+          <ImageWithFallback
+            src={project.heroImage}
+            alt={`${project.title} — hero`}
+            className="project-hero-img"
+            color={project.color}
+          />
+        </section>
+      )}
 
       {/* Statement */}
       <section className="project-statement section">
@@ -148,37 +237,21 @@ export default function ProjectPage() {
       <section className="project-concept section">
         <div className="container">
           <div className="project-section-header">
-            <span className="text-overline">Concept</span>
+            <span className="text-overline">Concept & Approach</span>
             <div className="arch-line" style={{ maxWidth: 80 }} />
           </div>
           <p className="project-concept-text">{project.concept}</p>
-
-          {project.sketches.length > 0 && (
-            <div className="project-concept-sketches">
-              {project.sketches.map((sketch: ProjectImage, i: number) => (
-                <div key={i} className="project-sketch-item" data-cursor="Zoom">
-                  <ImageWithFallback
-                    src={sketch.src}
-                    alt={sketch.alt}
-                    color={project.color}
-                  />
-                  {sketch.caption && (
-                    <span className="project-image-caption text-label">{sketch.caption}</span>
-                  )}
-                </div>
-              ))}
-            </div>
-          )}
         </div>
       </section>
 
       {/* Gallery */}
-      {project.gallery.length > 0 && (
+      {project.gallery && project.gallery.length > 0 && (
         <section className="project-gallery section">
           <div className="container">
             <div className="project-section-header">
-              <span className="text-overline">Gallery</span>
+              <span className="text-overline">Visualizations & Perspectives</span>
               <div className="arch-line" style={{ maxWidth: 80 }} />
+              <span className="project-gallery-counter text-label">{project.gallery.length} Plates</span>
             </div>
           </div>
 
@@ -189,12 +262,13 @@ export default function ProjectPage() {
                 className={`project-gallery-item project-gallery-item--${
                   i === 0 ? 'full' : i % 3 === 0 ? 'full' : 'half'
                 }`}
-                data-cursor="View"
+                data-cursor="Inspect"
               >
                 <ImageWithFallback
                   src={img.src}
                   alt={img.alt}
                   color={project.color}
+                  onClick={() => openLightbox(img.src)}
                 />
                 {img.caption && (
                   <span className="project-image-caption text-label">{img.caption}</span>
@@ -205,106 +279,27 @@ export default function ProjectPage() {
         </section>
       )}
 
-      {/* Plans */}
-      {project.plans.length > 0 && (
-        <section className="project-plans section">
-          <div className="container">
-            <div className="project-section-header">
-              <span className="text-overline">Plans</span>
-              <div className="arch-line" style={{ maxWidth: 80 }} />
-            </div>
-
-            <div className="project-drawings-grid">
-              {project.plans.map((plan: ProjectImage, i: number) => (
-                <div key={i} className="project-drawing-item" data-cursor="Zoom">
-                  <ImageWithFallback
-                    src={plan.src}
-                    alt={plan.alt}
-                    color={project.color}
-                  />
-                  {plan.caption && (
-                    <span className="project-image-caption text-label">{plan.caption}</span>
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* Sections */}
-      {project.sections.length > 0 && (
-        <section className="project-sections section">
-          <div className="container">
-            <div className="project-section-header">
-              <span className="text-overline">Sections</span>
-              <div className="arch-line" style={{ maxWidth: 80 }} />
-            </div>
-
-            <div className="project-drawings-grid">
-              {project.sections.map((sec: ProjectImage, i: number) => (
-                <div key={i} className="project-drawing-item" data-cursor="Zoom">
-                  <ImageWithFallback
-                    src={sec.src}
-                    alt={sec.alt}
-                    color={project.color}
-                  />
-                  {sec.caption && (
-                    <span className="project-image-caption text-label">{sec.caption}</span>
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* Drawings / Elevations */}
-      {project.drawings.length > 0 && (
+      {/* Drawings / Technical Sheets */}
+      {project.drawings && project.drawings.length > 0 && (
         <section className="project-elevations section">
           <div className="container">
             <div className="project-section-header">
-              <span className="text-overline">Drawings</span>
+              <span className="text-overline">Architectural & Technical Documentation</span>
               <div className="arch-line" style={{ maxWidth: 80 }} />
+              <span className="project-gallery-counter text-label">{project.drawings.length} Drawings</span>
             </div>
 
             <div className="project-drawings-grid">
               {project.drawings.map((drw: ProjectImage, i: number) => (
-                <div key={i} className="project-drawing-item" data-cursor="Zoom">
+                <div key={i} className="project-drawing-item" data-cursor="Inspect">
                   <ImageWithFallback
                     src={drw.src}
                     alt={drw.alt}
                     color={project.color}
+                    onClick={() => openLightbox(drw.src)}
                   />
                   {drw.caption && (
                     <span className="project-image-caption text-label">{drw.caption}</span>
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* Materials */}
-      {project.materials.length > 0 && (
-        <section className="project-materials section">
-          <div className="container">
-            <div className="project-section-header">
-              <span className="text-overline">Materiality</span>
-              <div className="arch-line" style={{ maxWidth: 80 }} />
-            </div>
-
-            <div className="project-materials-grid">
-              {project.materials.map((mat: ProjectImage, i: number) => (
-                <div key={i} className="project-material-item">
-                  <ImageWithFallback
-                    src={mat.src}
-                    alt={mat.alt}
-                    color={project.color}
-                  />
-                  {mat.caption && (
-                    <span className="project-image-caption text-label">{mat.caption}</span>
                   )}
                 </div>
               ))}
@@ -317,17 +312,17 @@ export default function ProjectPage() {
       <section className="project-info section">
         <div className="container">
           <div className="project-section-header">
-            <span className="text-overline">Project Information</span>
+            <span className="text-overline">Project Specifications</span>
             <div className="arch-line" style={{ maxWidth: 80 }} />
           </div>
 
           <div className="project-info-grid">
             <div className="project-info-item">
-              <span className="text-label">Client</span>
+              <span className="text-label">Client / Studio</span>
               <span className="project-info-value">{project.client}</span>
             </div>
             <div className="project-info-item">
-              <span className="text-label">Architect</span>
+              <span className="text-label">Architect / Designer</span>
               <span className="project-info-value">Rohit R Kulkarni</span>
             </div>
             <div className="project-info-item">
@@ -346,7 +341,7 @@ export default function ProjectPage() {
               <span className="text-label">Status</span>
               <span className="project-info-value">{project.status}</span>
             </div>
-            {project.collaborators.length > 0 && (
+            {project.collaborators && project.collaborators.length > 0 && (
               <div className="project-info-item project-info-item--full">
                 <span className="text-label">Collaborators</span>
                 <span className="project-info-value">
@@ -387,6 +382,93 @@ export default function ProjectPage() {
             />
           </Link>
         </section>
+      )}
+
+      {/* Architectural Lightbox Modal */}
+      {activeMedia && (
+        <div className="arch-lightbox" onClick={closeLightbox}>
+          <div className="arch-lightbox-overlay" />
+
+          {/* Top Bar */}
+          <div className="arch-lightbox-header" onClick={(e) => e.stopPropagation()}>
+            <div className="arch-lightbox-title-wrap">
+              <span className="arch-lightbox-project-name">{project.title}</span>
+              <span className="arch-lightbox-divider">/</span>
+              <span className="arch-lightbox-caption">{activeMedia.caption || activeMedia.alt}</span>
+            </div>
+
+            <div className="arch-lightbox-controls">
+              <button
+                type="button"
+                className="arch-lightbox-ctrl-btn"
+                onClick={() => setIsZoomed(!isZoomed)}
+                title="Toggle Zoom"
+              >
+                {isZoomed ? 'Actual Size (1:1)' : 'Fit View'}
+              </button>
+              <button
+                type="button"
+                className="arch-lightbox-close-btn"
+                onClick={closeLightbox}
+                title="Close (Esc)"
+              >
+                ✕
+              </button>
+            </div>
+          </div>
+
+          {/* Main Content Area */}
+          <div
+            className={`arch-lightbox-body ${isZoomed ? 'is-zoomed' : ''}`}
+            onClick={(e) => {
+              // Click on image toggles zoom
+              e.stopPropagation();
+              setIsZoomed(!isZoomed);
+            }}
+          >
+            <img
+              src={encodeURI(activeMedia.src)}
+              alt={activeMedia.alt}
+              className="arch-lightbox-image"
+            />
+          </div>
+
+          {/* Nav buttons */}
+          {allMediaImages.length > 1 && (
+            <>
+              <button
+                type="button"
+                className="arch-lightbox-nav arch-lightbox-nav--prev"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  prevImage();
+                }}
+                aria-label="Previous sheet"
+              >
+                ‹
+              </button>
+              <button
+                type="button"
+                className="arch-lightbox-nav arch-lightbox-nav--next"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  nextImage();
+                }}
+                aria-label="Next sheet"
+              >
+                ›
+              </button>
+            </>
+          )}
+
+          {/* Bottom Bar Counter */}
+          <div className="arch-lightbox-footer" onClick={(e) => e.stopPropagation()}>
+            <span className="arch-lightbox-counter arch-number">
+              {String((activeImageIndex ?? 0) + 1).padStart(2, '0')} / {String(allMediaImages.length).padStart(2, '0')}
+            </span>
+            <span className="arch-lightbox-hint">Use ← → arrow keys to navigate · ESC to close</span>
+          </div>
+        </div>
       )}
     </div>
   );

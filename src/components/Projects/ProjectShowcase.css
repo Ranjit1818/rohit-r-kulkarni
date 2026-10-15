@@ -355,6 +355,89 @@
   transform: translateX(6px);
 }
 
+/* Filters */
+.projects-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-top: var(--space-lg);
+  padding-top: var(--space-md);
+  border-top: 1px solid var(--color-border);
+}
+
+.projects-filter-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.9rem;
+  background: transparent;
+  border: 1px solid var(--color-border);
+  color: var(--color-text-secondary);
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  font-weight: 400;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  border-radius: 2px;
+}
+
+.projects-filter-btn:hover {
+  border-color: var(--color-accent);
+  color: var(--color-text-primary);
+  background: rgba(196, 118, 78, 0.04);
+}
+
+.projects-filter-btn.is-active {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+  color: #0d0c0b;
+  font-weight: 500;
+}
+
+.projects-filter-count {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  opacity: 0.75;
+}
+
+.projects-filter-btn.is-active .projects-filter-count {
+  opacity: 1;
+}
+
+/* Media count badge */
+.project-card-badge {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.35rem 0.65rem;
+  background: rgba(13, 12, 11, 0.85);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 2px;
+  pointer-events: none;
+}
+
+.project-card-badge-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.project-card-badge-text {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-text-secondary);
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .project-card-details {
@@ -363,5 +446,14 @@
 
   .project-card-description {
     display: none;
+  }
+
+  .projects-filters {
+    gap: 0.4rem;
+  }
+
+  .projects-filter-btn {
+    padding: 0.4rem 0.7rem;
+    font-size: 0.68rem;
   }
 }

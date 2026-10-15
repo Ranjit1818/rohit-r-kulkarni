@@ -26,6 +26,7 @@ export interface Project {
   drawings: ProjectImage[];
   materials: ProjectImage[];
   color: string;
+  category: 'academic' | 'hospitality' | 'competition' | 'technical' | 'residential';
 }
 
 export const projects: Project[] = [
@@ -45,25 +46,21 @@ export const projects: Project[] = [
       "A comprehensive architectural campus designed as a living laboratory for architectural education. The scheme organizes academic, recreational, and residential programs around a series of stepped courts and exhibition spaces, creating a microcosm of architectural experience within the campus itself.",
     concept:
       "The design centers on the idea that an architecture school should itself be an architectural education. The building is organized around a Stepped Court, an Art Court, and an Open Exhibition Space — each functioning as an outdoor classroom where light, material, and spatial sequence become the curriculum. The masterplan integrates a Canteen, Auditorium, Sports Complex, Hostels, Open Air Theatre, Central Water Body, Staff Quarters, and Academic Block into a coherent landscape.",
-    heroImage: '/images/projects/horizon/hero.jpg',
+    heroImage: '/images/projects/school  of  architecture/3D1.jpg.jpeg',
     gallery: [
-      { src: '/images/projects/horizon/gallery-1.jpg', alt: 'School of Architecture — main entrance and courtyard', caption: 'Main entrance with BLDEA signage' },
-      { src: '/images/projects/horizon/hero.jpg', alt: 'Aerial masterplan perspective', caption: 'Aerial site perspective' },
+      { src: '/images/projects/school  of  architecture/3D1.jpg.jpeg', alt: 'School of Architecture — 3D perspective view', caption: '3D Aerial Perspective' },
+      { src: '/images/projects/school  of  architecture/r2.jpg.jpeg', alt: 'School of Architecture — exterior render', caption: 'Exterior Render — Main Block' },
+      { src: '/images/projects/school  of  architecture/r5.jpg.jpeg', alt: 'School of Architecture — campus view', caption: 'Campus Landscape View' },
+      { src: '/images/projects/school  of  architecture/r6.jpg.jpeg', alt: 'School of Architecture — courtyard', caption: 'Courtyard & Stepped Court' },
+      { src: '/images/projects/school  of  architecture/r7.jpg.jpeg', alt: 'School of Architecture — detail view', caption: 'Architectural Detail' },
     ],
-    plans: [
-      { src: '/images/projects/horizon/hero.jpg', alt: 'Site masterplan at 1:500', caption: 'Masterplan — 1:500' },
-    ],
-    sections: [
-      { src: '/images/projects/horizon/gallery-1.jpg', alt: 'Section through stepped court', caption: "Section A–A' through Stepped Court — 1:200" },
-    ],
-    sketches: [
-      { src: '/images/projects/horizon/gallery-1.jpg', alt: 'Concept development', caption: 'Spatial sequence study' },
-    ],
-    drawings: [
-      { src: '/images/projects/horizon/hero.jpg', alt: 'Front elevation', caption: 'Front Elevation — 1:200' },
-    ],
+    plans: [],
+    sections: [],
+    sketches: [],
+    drawings: [],
     materials: [],
     color: '#8A7B6B',
+    category: 'academic',
   },
   {
     id: 'hill-resort',
@@ -81,27 +78,22 @@ export const projects: Project[] = [
       'A terrain-responsive hill resort nestled along the Kaveri River near Gaganachukki Falls. The design integrates sustainable architecture with the surrounding topography, harnessing elevated terrain, scenic waterfall views, and natural eco-tourism potential while addressing environmental impact, slope stability, and accessibility.',
     concept:
       "The resort is conceived as a sequence of discoveries along the hillside — each structure responding to the unique contour it sits upon. The program includes Suite Rooms, Cottages, Executive Rooms, Tree Houses, a Villa, a Health & Wellness Block with Spa, Gym, Yoga, and a Banquet Hall. The Back Office draws inspiration from weaver bird nest forms, while the Tree Houses are biomimetic designs wrapped around existing tree trunks.",
-    heroImage: '/images/projects/terra/hero.jpg',
+    heroImage: '/images/projects/hill  resort/resro.png',
     gallery: [
-      { src: '/images/projects/terra/hero.jpg', alt: 'Hill Resort view deck overlooking valley', caption: 'View deck with valley panorama' },
-      { src: '/images/projects/terra/gallery-1.jpg', alt: 'Cottage exterior nestled in landscape', caption: 'Cottage integration with terrain' },
+      { src: '/images/projects/hill  resort/resro.png', alt: 'Hill Resort — restaurant panoramic view deck', caption: 'Restaurant — Panoramic Kaveri Valley View Deck' },
+      { src: '/images/projects/hill  resort/resto7.png', alt: 'Hill Resort — restaurant interior', caption: 'Restaurant Interior — Biophilic Dining Experience' },
+      { src: '/images/projects/hill  resort/timber_screen_pool.png', alt: 'Hill Resort — water feature & timber screens', caption: 'Reflecting Pool & Timber Screen Pavilion' },
+      { src: '/images/projects/hill  resort/landscape_approach.png', alt: 'Hill Resort — landscape integration', caption: 'Hillside Approach & Contour Terracing' },
+      { src: '/images/projects/hill  resort/admin 5.png', alt: 'Hill Resort — administration block', caption: "Administration Block — Weaver Bird's Nest Biomimetic Form" },
+      { src: '/images/projects/hill  resort/exicative 66.png', alt: 'Hill Resort — executive suites', caption: 'Executive Suites — Stepped Terrain Integration' },
     ],
-    plans: [
-      { src: '/images/projects/terra/hero.jpg', alt: 'Topographical site masterplan', caption: 'Topographical Masterplan — 1:400' },
-    ],
-    sections: [
-      { src: '/images/projects/terra/gallery-1.jpg', alt: 'Topographical section', caption: "Topographical Section A–A'" },
-    ],
-    sketches: [
-      { src: '/images/projects/terra/hero.jpg', alt: 'Terrain response study', caption: 'Terrain-responsive massing' },
-    ],
-    drawings: [
-      { src: '/images/projects/terra/gallery-1.jpg', alt: 'South-west elevation', caption: 'South-West Elevation' },
-    ],
-    materials: [
-      { src: '/images/projects/terra/hero.jpg', alt: 'Wooden louver detail', caption: 'Wooden louver screens — Back Office' },
-    ],
+    plans: [],
+    sections: [],
+    sketches: [],
+    drawings: [],
+    materials: [],
     color: '#6B8A5E',
+    category: 'hospitality',
   },
   {
     id: 'archaeological-museum',
@@ -116,95 +108,123 @@ export const projects: Project[] = [
     client: 'Karnataka Tourism',
     collaborators: [],
     description:
-      "A meta-architectural museum that reinterprets the traditional regional heritage of Vijayapura through contemporary spatial strategies. The design draws from the city's rich Deccan architectural legacy — using the Stepwell as a spatial concept for descent and collective memory, Wind Catcher towers for passive cooling, and locally sourced Natural Red Sandstone to connect with the historical identity.",
+      "A meta-architectural museum that reinterprets the traditional regional heritage of Vijayapura through contemporary spatial strategies. The design draws from the city's rich Deccan architectural legacy — using the Stepwell as a spatial concept for descent and collective memory, Wind Catcher towers for passive cooling, and locally sourced Natural Red Sandstone to connect with historical identity.",
     concept:
       "The museum is organized around a central Open Air Theatre conceived as a contemporary stepwell — a descending communal space that connects visitors to the archaeology below ground. Wind Catcher towers rise from the mass, providing passive ventilation while creating a striking silhouette that echoes Vijayapura's historic skyline. The Sky Walk offers elevated views connecting exhibition zones. Materials are drawn from the earth of the Deccan plateau itself.",
-    heroImage: '/images/projects/monolith/hero.jpg',
+    heroImage: '/images/projects/archeological  museuem/hero_exterior.jpg',
     gallery: [
-      { src: '/images/projects/monolith/hero.jpg', alt: 'Museum entry with red sandstone wind towers', caption: 'Entry sequence — sandstone wind towers' },
-      { src: '/images/projects/monolith/gallery-1.jpg', alt: 'Interior exhibition space', caption: 'Interior gallery and sky walk' },
-    ],
-    plans: [
-      { src: '/images/projects/monolith/hero.jpg', alt: 'Ground floor plan around central OAT', caption: 'Ground Floor Plan — 1:200' },
-    ],
-    sections: [
-      { src: '/images/projects/monolith/gallery-1.jpg', alt: 'Section showing wind catchers', caption: "Section A–A' with wind catchers — 1:200" },
-    ],
-    sketches: [
-      { src: '/images/projects/monolith/hero.jpg', alt: 'Stepwell spatial concept', caption: 'Stepwell spatial concept diagram' },
-    ],
-    drawings: [
-      { src: '/images/projects/monolith/gallery-1.jpg', alt: 'Wind catcher detail elevation', caption: 'Wind Catcher elevation detail' },
-    ],
-    materials: [
-      { src: '/images/projects/monolith/hero.jpg', alt: 'Natural red sandstone', caption: 'Natural Red Sandstone — Vijayapura' },
-    ],
-    color: '#C4764E',
-  },
-  {
-    id: 'highrise-apartment',
-    number: '04',
-    title: 'High-Rise Apartment',
-    location: 'Whitefield, Bengaluru',
-    year: '2025',
-    type: 'Residential / Mixed-Use',
-    status: 'Academic Project',
-    role: 'Lead Designer',
-    area: '48,000 sqm',
-    client: 'Private Developer',
-    collaborators: [],
-    description:
-      "A high-density vertical residential complex designed for Bengaluru's rapidly growing Whitefield IT corridor. The scheme offers optimized unit planning across 4.5 BHK, 3.5 BHK, and Duplex Villa configurations — prioritizing natural light, cross-ventilation, common amenities, structural efficiency, and green spaces.",
-    concept:
-      "The tower is organized around a structural core that allows for flexible unit configurations. The podium level integrates multi-level parking with landscaped terraces, while Duplex Villa penthouses at the crown offer private terrace gardens and double-height living spaces. The design balances density with livability, ensuring every unit has access to natural light, ventilation, and views.",
-    heroImage: '/images/projects/lumina/hero.jpg',
-    gallery: [
-      { src: '/images/projects/lumina/hero.jpg', alt: 'Tower view from street level', caption: 'Tower perspective from Whitefield Road' },
-      { src: '/images/projects/lumina/gallery-1.jpg', alt: 'Podium and landscaping', caption: 'Podium landscape and amenities' },
-    ],
-    plans: [
-      { src: '/images/projects/lumina/hero.jpg', alt: '4.5 BHK cluster plan', caption: '4.5 BHK Typical Cluster Plan' },
-      { src: '/images/projects/lumina/gallery-1.jpg', alt: 'Duplex villa floor plan', caption: 'Duplex Villa — Lower & Upper Floor' },
-    ],
-    sections: [
-      { src: '/images/projects/lumina/hero.jpg', alt: 'Building section showing podium parking', caption: "Section A–A' — Podium Parking Levels" },
-    ],
-    sketches: [],
-    drawings: [
-      { src: '/images/projects/lumina/gallery-1.jpg', alt: 'Key plan and future expansion', caption: 'Key Plan — Future Expansion Zone' },
-    ],
-    materials: [],
-    color: '#7B8A9A',
-  },
-  {
-    id: 'design-competitions',
-    number: '05',
-    title: 'Design Competitions',
-    location: 'Various, India',
-    year: '2023 — 2026',
-    type: 'Competition / Conceptual',
-    status: 'Awards & Mentions',
-    role: 'Team Leader / Designer',
-    area: 'Various',
-    client: 'NASA India / Space Zero Design',
-    collaborators: ['NASA Unit, BLDEA'],
-    description:
-      "A curated collection of competition entries and conceptual explorations spanning NASA India Design Trophy submissions, Space Zero Design challenges, and independent design investigations. These projects push the boundaries of architectural thinking — exploring untangled spatial narratives, sustainable strategies, and bold formal experimentation.",
-    concept:
-      "Each competition entry represents a unique exploration of creativity, problem-solving, and attention to detail. From NASA Zonal Convention entries earning Special Mention Awards to consecutive Space Zero Design victories, these projects demonstrate rigorous design thinking applied under constraint — limited time, bold briefs, and the pressure of peer evaluation.",
-    heroImage: '/images/projects/void/hero.jpg',
-    gallery: [
-      { src: '/images/projects/void/hero.jpg', alt: 'Competition design — spatial exploration', caption: 'NASA Design Trophy — Concept' },
-      { src: '/images/projects/void/gallery-1.jpg', alt: 'Competition model and presentation', caption: 'Space Zero Design entry' },
+      { src: '/images/projects/archeological  museuem/hero_exterior.jpg', alt: 'Archaeological Museum — stepwell amphitheatre and wind towers', caption: 'Exterior Perspective — Stepwell Open-Air Theatre & Passive Wind Catchers' },
+      { src: '/images/projects/archeological  museuem/gallery_interior.jpg', alt: 'Archaeological Museum — exhibition hall with jaali screens', caption: 'Main Exhibition Hall — Vaulted Ceilings & Red Sandstone Jaali Screens' },
     ],
     plans: [],
     sections: [],
-    sketches: [
-      { src: '/images/projects/void/hero.jpg', alt: 'Competition concept sketch', caption: 'Untangled — concept exploration' },
-    ],
+    sketches: [],
     drawings: [],
     materials: [],
+    color: '#C4764E',
+    category: 'academic',
+  },
+  {
+    id: 'znc-award-winning',
+    number: '04',
+    title: 'ZNC Award Winning Design',
+    location: 'Coimbatore, Tamil Nadu',
+    year: '2024',
+    type: 'Competition / Conceptual',
+    status: 'NASA India — Special Mention Award',
+    role: 'Team Leader & Designer',
+    area: '10,000 sqm',
+    client: 'NASA India Design Trophy',
+    collaborators: ['NASA Unit, BLDEA'],
+    description:
+      "An award-winning competition entry for the NASA India Zonal Convention Design Trophy. The design reimagines a sustaining public building in downtown Coimbatore — a 10,000 sqm site transformed into a bamboo-and-AAC block structure centered around a circular masterplan with integrated green spaces, terrace gardens, and passive environmental strategies.",
+    concept:
+      "The concept integrates traditional bamboo construction with contemporary AAC block masonry, creating a building that breathes. A circular masterplan organizes the program — Reception, Multipurpose Hall, Gallery, and Library — around a central green spine. The section reveals a fluid, organic form that emerges from the landscape. Sun-path analysis drives orientation. Bamboo joinery details, bamboo columns, and terrace garden systems demonstrate a commitment to sustainable, craft-driven architecture.",
+    heroImage: '/images/projects/ZNC  AWARD WINNING  SHEET/9e74991c-3129-4155-a7e4-58ea89d01729.png',
+    gallery: [
+      { src: '/images/projects/ZNC  AWARD WINNING  SHEET/9e74991c-3129-4155-a7e4-58ea89d01729.png', alt: 'ZNC Award Winning Sheet — masterplan, section, elevation', caption: 'Complete Design Sheet — Masterplan, Section & Elevation' },
+    ],
+    plans: [],
+    sections: [],
+    sketches: [],
+    drawings: [
+      { src: '/images/projects/ZNC  AWARD WINNING  SHEET/9e74991c-3129-4155-a7e4-58ea89d01729.png', alt: 'NASA India Competition Sheet — High Resolution Details', caption: 'Full Competition Sheet — Bamboo Structural Details & Masterplan' },
+    ],
+    materials: [],
     color: '#6B7B8A',
+    category: 'competition',
+  },
+  {
+    id: 'working-drawing',
+    number: '05',
+    title: 'Working Drawing',
+    location: 'Vijayapura, Karnataka',
+    year: '2025',
+    type: 'Technical / Construction',
+    status: 'Academic Project',
+    role: 'Lead Drafter',
+    area: 'Various',
+    client: "BLDEA's University",
+    collaborators: [],
+    description:
+      "A comprehensive set of construction working drawings demonstrating mastery of technical architectural documentation. The sheets cover structural layout, center-line plans, footing plans, column orientation, reinforcement schedules, and construction sections — all drawn to professional standards with proper scale notation, key plans, and schedule tables.",
+    concept:
+      "The working drawings represent the translation of architectural design into buildable reality. Each sheet is meticulously detailed with center-line unit plans, column-along-footing layouts, schedule of columns, schedule of footings, reinforcement details, and section cuts — demonstrating a thorough understanding of structural systems, construction documentation standards, and the architect's role in ensuring design intent is communicated precisely to the construction team.",
+    heroImage: '/images/projects/working  drawing/content 5 page 1.png',
+    gallery: [
+      { src: '/images/projects/working  drawing/content 5 page 1.png', alt: 'Working Drawing — page 1 overview', caption: 'Sheet 1 — Center Line Plan & Structural Layout' },
+      { src: '/images/projects/working  drawing/content -5 page2.png', alt: 'Working Drawing — page 2 details', caption: 'Sheet 2 — Column & Footing Details' },
+      { src: '/images/projects/working  drawing/content 5 page 3.png', alt: 'Working Drawing — page 3 sections', caption: 'Sheet 3 — Sections & Reinforcement Schedule' },
+      { src: '/images/projects/working  drawing/content  5-page 5.png', alt: 'Working Drawing — page 5 details', caption: 'Sheet 4 — Construction Details & Key Plan' },
+    ],
+    plans: [
+      { src: '/images/projects/working  drawing/content 5 page 1.png', alt: 'Center Line Plan', caption: 'Center Line Plan & Structural Layout Grid' },
+      { src: '/images/projects/working  drawing/content -5 page2.png', alt: 'Footing & Column Layout', caption: 'Footing Layout & Column Orientation Schedule' },
+    ],
+    sections: [
+      { src: '/images/projects/working  drawing/content 5 page 3.png', alt: 'Construction Sections', caption: 'Building Cross Sections & Structural Levels' },
+    ],
+    sketches: [],
+    drawings: [
+      { src: '/images/projects/working  drawing/content 5 page 1.png', alt: 'Working Drawing Sheet 1', caption: 'Sheet 1 — Center Line Plan & Structural Grid' },
+      { src: '/images/projects/working  drawing/content -5 page2.png', alt: 'Working Drawing Sheet 2', caption: 'Sheet 2 — Footing Details & Reinforcement Table' },
+      { src: '/images/projects/working  drawing/content 5 page 3.png', alt: 'Working Drawing Sheet 3', caption: 'Sheet 3 — Longitudinal Section & Elevation' },
+      { src: '/images/projects/working  drawing/content  5-page 5.png', alt: 'Working Drawing Sheet 4', caption: 'Sheet 4 — Staircase, Lintel & Canopy Details' },
+    ],
+    materials: [],
+    color: '#9A7B6B',
+    category: 'technical',
+  },
+  {
+    id: 'freelance-projects',
+    number: '06',
+    title: 'Freelance Projects',
+    location: 'Karnataka, India',
+    year: '2024 — 2026',
+    type: 'Residential / Freelance',
+    status: 'Built & In Progress',
+    role: 'Architect & Visualizer',
+    area: 'Various',
+    client: 'Private Clients',
+    collaborators: [],
+    description:
+      "A curated collection of freelance residential design and visualization projects undertaken for private clients across Karnataka. Each project balances contemporary aesthetics with practical spatial planning — from the Natikar Residence featuring lush terrace gardens and exposed brick accents, to the Surpur Residence with its bold massing and wooden louver screens.",
+    concept:
+      "Each freelance project begins with an intimate understanding of the client's lifestyle, site constraints, and aspirations. The designs combine modern volumetric composition with contextual material choices — exposed brick, timber screens, planted terraces, and carefully articulated facades. 3D visualization using Enscape and SketchUp brings the client into the design process, enabling informed decision-making before construction begins.",
+    heroImage: '/images/projects/Miscellaneous freelance projects/NATIKAR  R5.jpg.jpeg',
+    gallery: [
+      { src: '/images/projects/Miscellaneous freelance projects/NATIKAR  R5.jpg.jpeg', alt: 'Natikar Residence — front elevation with terrace garden', caption: 'Natikar Residence — Front Elevation' },
+      { src: '/images/projects/Miscellaneous freelance projects/NATIKAR  R2.jpg.jpeg', alt: 'Natikar Residence — alternate view', caption: 'Natikar Residence — Side Perspective' },
+      { src: '/images/projects/Miscellaneous freelance projects/surpur r1.jpg.jpeg', alt: 'Surpur Residence — street view', caption: 'Surpur Residence — Street Elevation' },
+      { src: '/images/projects/Miscellaneous freelance projects/Enscape_2026-07-02-10-19-08.jpg.jpeg', alt: 'Freelance project — Enscape render', caption: 'Residential Visualization — Enscape Render' },
+    ],
+    plans: [],
+    sections: [],
+    sketches: [],
+    drawings: [],
+    materials: [],
+    color: '#7B8A6B',
+    category: 'residential',
   },
 ];
 
@@ -296,8 +316,8 @@ export const architectInfo = {
     'Content Creation in Architecture',
   ],
   contact: {
-    email: 'rohitkulkarni.arch@gmail.com',
-    phone: '+91 98765 43210',
+    email: 'rohitkulkarni1718@gmail.com',
+    phone: '+91 8310718546',
     location: 'Vijayapura, Karnataka, India',
     linkedin: 'https://linkedin.com/in/rohitrkulkarni',
     instagram: 'https://instagram.com/rohit.arch',
