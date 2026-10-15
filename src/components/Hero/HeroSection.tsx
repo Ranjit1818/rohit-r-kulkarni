@@ -91,22 +91,45 @@ export default function HeroSection() {
         </div>
 
         <div className="hero-center">
-          <div className="hero-name-wrapper">
-            <h1 className="hero-name">
-              <span className="hero-name-line">
-                <span className="hero-name-text">Rohit R</span>
-              </span>
-              <span className="hero-name-line">
-                <span className="hero-name-text hero-name-text--light">Kulkarni</span>
-              </span>
-            </h1>
+          {/* Desktop: text col on left */}
+          <div className="hero-text-col">
+            <div className="hero-name-wrapper">
+              <h1 className="hero-name">
+                <span className="hero-name-line">
+                  <span className="hero-name-text">Rohit R</span>
+                </span>
+                <span className="hero-name-line">
+                  <span className="hero-name-text hero-name-text--light">Kulkarni</span>
+                </span>
+              </h1>
+            </div>
+
+            <div className="hero-statement-wrapper">
+              <p className="hero-statement">
+                Designing spaces that feel meaningful,<br />
+                functional, and deeply connected to people and place.
+              </p>
+            </div>
+
+            <div className="hero-portrait-label">
+              <span className="text-label">Architect</span>
+              <span className="hero-label-divider" />
+              <span className="text-label">B.Arch 2022–2027</span>
+            </div>
           </div>
 
-          <div className="hero-statement-wrapper">
-            <p className="hero-statement">
-              Designing spaces that feel meaningful,<br />
-              functional, and deeply connected to people and place.
-            </p>
+          {/* Portrait column */}
+          <div className="hero-portrait-col">
+            <div className="hero-portrait-frame">
+              <img
+                src="/images/my_image.png"
+                alt="Rohit R Kulkarni — Architect"
+                className="hero-portrait-img"
+              />
+              <div className="hero-portrait-overlay" />
+              <div className="hero-portrait-corner hero-portrait-corner--tl" />
+              <div className="hero-portrait-corner hero-portrait-corner--br" />
+            </div>
           </div>
         </div>
 
